@@ -2,16 +2,13 @@
 terraform-project/
 ├── dev/
 │   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
+│   ├── terraform.tfvars
 ├── staging/
 │   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
+│   ├── terraform.tfvars
 ├── prod/
 │   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
+│   ├── terraform.tfvars
 ├── modules/
 │   ├── vpc/
 │   │   ├── main.tf
