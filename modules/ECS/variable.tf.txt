@@ -1,0 +1,79 @@
+variable "cluster_name" {
+  description = "Name of the ECS cluster"
+  type        = string
+}
+
+variable "task_family" {
+  description = "Family name of the ECS task definition"
+  type        = string
+}
+
+variable "task_cpu" {
+  description = "The number of CPU units for the task"
+  type        = string
+}
+
+variable "task_memory" {
+  description = "The amount of memory (in MiB) for the task"
+  type        = string
+}
+
+variable "container_name" {
+  description = "Name of the container"
+  type        = string
+}
+
+variable "container_image" {
+  description = "Docker image for the container"
+  type        = string
+}
+
+variable "container_port" {
+  description = "Port for the container"
+  type        = number
+}
+
+variable "container_memory_reservation" {
+  description = "Memory reservation for the container"
+  type        = number
+}
+
+variable "execution_role_arn" {
+  description = "ARN of the ECS task execution role"
+  type        = string
+}
+
+variable "task_role_arn" {
+  description = "ARN of the ECS task role"
+  type        = string
+}
+
+variable "service_name" {
+  description = "Name of the ECS service"
+  type        = string
+}
+
+variable "desired_count" {
+  description = "Number of desired tasks to run"
+  type        = number
+}
+
+variable "subnets" {
+  description = "Subnets to associate with the ECS service"
+  type        = list(string)
+}
+
+variable "security_group" {
+  description = "Security group for the ECS service"
+  type        = string
+}
+
+variable "assign_public_ip" {
+  description = "Whether to assign a public IP to ECS tasks"
+  type        = bool
+}
+
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+}
