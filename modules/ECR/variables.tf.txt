@@ -1,0 +1,24 @@
+variable "ecr_name" {
+  description = "Name"
+  type        = string
+}
+
+variable "image_tag_mutability" {
+  description = "Whether image tags are mutable or immutable"
+  type        = string
+}
+
+variable "image_scanning_enabled" {
+  description = "Enable scanning of images on push"
+  type        = bool
+}
+
+variable "lifecycle_policy" {
+  description = "Lifecycle policy for repository"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name "
+  type        = string
+}
