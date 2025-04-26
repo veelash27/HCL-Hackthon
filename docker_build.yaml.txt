@@ -1,0 +1,65 @@
+name: Build, Push Docker Image, and Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main   # Trigger on pushes to the main branch
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    name: Build, Push, and Deploy Docker Image to ECS
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the Code
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Step 2: Configure AWS Credentials (Hardcoded for simplicity, replace with GitHub Secrets for security)
+    - name: Configure AWS Credentials
+      run: |
+        export AWS_ACCESS_KEY_ID="AKIAX3NVJFI7IFDABU6N"
+        export AWS_SECRET_ACCESS_KEY="VP5WWdj3drDW57YAN+imE0eT/ACF26lj4/FkLYAj"
+
+    # Step 3: Login to Amazon ECR
+    - name: Login to Amazon ECR
+      run: |
+        aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin myCluster.dkr.ecr.us-west-1.amazonaws.com
+
+    # Step 4: Build, Tag, and Push Docker Image
+    - name: Build, Tag, and Push Docker Image
+      env:
+        ECR_REGISTRY: "myCluster.dkr.ecr.us-west-1.amazonaws.com"
+        REPOSITORY_NAME: "dev/patient-service"
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build the Docker image
+        docker build -t $ECR_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG .
+
+        # Tag the Docker image
+        docker tag $ECR_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG $ECR_REGISTRY/$REPOSITORY_NAME:latest
+
+        # Push the Docker image with both the SHA tag and the latest tag
+        docker push $ECR_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$REPOSITORY_NAME:latest
+
+    # Step 5: Update ECS Task Definition with New Image
+    - name: Update ECS Task Definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json     # Path to your task definition file
+        container-name: patient-service           # Name of the container in the task definition
+        image: myCluster.dkr.ecr.us-west-1.amazonaws.com/dev/patient-service:${{ github.sha }}
+
+    # Step 6: Deploy Updated ECS Service
+    - name: Deploy ECS Service
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: patient-service                  # Your ECS service name
+        cluster: myCluster                        # Your ECS cluster name
+        wait-for-service-stability: true

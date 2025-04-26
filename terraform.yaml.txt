@@ -1,0 +1,51 @@
+name: Deploy with Terraform Cloud
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Deploy with Terraform Cloud
+    runs-on: ubuntu-latest
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    # Step 2: Set up Terraform CLI with Terraform Cloud API token
+    - name: Set up Terraform CLI
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    # Step 3: Terraform Init
+    - name: Terraform Init
+      run: terraform init
+
+    # Step 4: Terraform Format Check
+    - name: Terraform Format Check
+      run: terraform fmt -check
+
+    # Step 5: Terraform Validation
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Step 6: Terraform Plan
+    - name: Terraform Plan
+      run: terraform plan -input=false
+
+    # Step 7: Terraform Apply (only on push to main branch)
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
