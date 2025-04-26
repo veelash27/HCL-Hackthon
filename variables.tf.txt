@@ -1,17 +1,17 @@
 variable "cidr_block" {
-  description = "CIDR block for the VPC"
+  description = "VPC CIDR"
   type        = string
-  default     = "10.0.0.0/16"  # You can change this default value as needed
+  default     = "10.0.0.0/16" 
 }
 
 variable "vpc_name" {
-  description = "Name of the VPC"
+  description = "VPC"
   type        = string
   default     = "my-vpc"
 }
 
 variable "public_subnet_cidr" {
-  description = "CIDR block for the public subnet"
+  description = "public subnet CIDR"
   type        = string
   default     = "10.0.1.0/24"
 }
@@ -29,13 +29,13 @@ variable "public_subnet_name" {
 }
 
 variable "private_subnet_cidr" {
-  description = "CIDR block for the private subnet"
+  description = "private subnet CIDR"
   type        = string
   default     = "10.0.2.0/24"
 }
 
 variable "private_subnet_name" {
-  description = "Name of the private subnet"
+  description = "private subnet name"
   type        = string
   default     = "private-subnet"
 }
