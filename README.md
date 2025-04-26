@@ -34,10 +34,7 @@ terraform-project/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   ├── ALB/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
+
 
 
 
